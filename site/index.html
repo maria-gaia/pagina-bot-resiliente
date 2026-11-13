@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Banco Demo Andino · Sitio ficticio de pruebas RPA</title>
+  <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+  <!-- Aviso permanente: este sitio es ficticio. No se oculta en ningún escenario. -->
+  <div class="aviso-ficticio" role="note" data-panel="aviso">
+    <strong>SITIO FICTICIO</strong> · Entorno de pruebas RPA de Gaia Consultores ·
+    No es un banco real · No ingrese datos reales
+  </div>
+
+  <!-- La aplicación se dibuja aquí desde app.js según el escenario activo. -->
+  <div id="raiz" class="raiz"></div>
+
+  <noscript>
+    <p class="noscript">Este sitio de pruebas necesita JavaScript habilitado.</p>
+  </noscript>
+
+  <!-- Panel de pruebas: es parte del entorno de pruebas, no del "banco".
+       Sus atributos son estables en todos los escenarios. -->
+  <aside class="panel-pruebas" data-panel="contenedor" aria-label="Panel de pruebas">
+    <button type="button" class="panel-pestana" data-panel="alternar" aria-expanded="true">
+      Panel de pruebas
+    </button>
+    <div class="panel-cuerpo" data-panel="cuerpo">
+      <div class="panel-estado" data-panel="estado"></div>
+
+      <label class="panel-campo">
+        <span>Escenario</span>
+        <select data-panel="escenario"></select>
+      </label>
+      <p class="panel-desc" data-panel="descripcion"></p>
+
+      <label class="panel-campo">
+        <span>Semilla (vacío = aleatoria)</span>
+        <input type="text" inputmode="numeric" data-panel="semilla" placeholder="ej. 123">
+      </label>
+
+      <label class="panel-check">
+        <input type="checkbox" data-panel="latencia"> Latencia aleatoria
+      </label>
+
+      <div class="panel-acciones">
+        <button type="button" data-panel="aplicar">Aplicar y recargar</button>
+        <button type="button" data-panel="copiar">Copiar URL</button>
+      </div>
+
+      <div class="panel-bitacora-cab">
+        <strong>Bitácora</strong>
+        <span data-panel="contador"></span>
+      </div>
+      <ol class="panel-bitacora" data-panel="bitacora"></ol>
+      <div class="panel-acciones">
+        <button type="button" data-panel="exportar">Exportar bitácora CSV</button>
+        <button type="button" data-panel="limpiar">Limpiar</button>
+      </div>
+    </div>
+  </aside>
+
+  <script src="app.js"></script>
+</body>
+</html>
