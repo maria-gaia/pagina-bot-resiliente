@@ -9,7 +9,7 @@ Nombre sugerido del flujo: `PoC_BotResiliente_BancoDemo`
 | Variable | Tipo | Valor por defecto |
 |---|---|---|
 | `NumEscenario` | Número | `0` |
-| `UrlBase` | Texto | `https://<usuario>.github.io/<repo>/site/index.html` |
+| `UrlBase` | Texto | `https://maria-gaia.github.io/pagina-bot-resiliente/site/index.html` |
 | `Cuenta` | Texto | `2200-4815-02` |
 | `FechaDesde` | Texto | `01/02/2026` |
 | `FechaHasta` | Texto | `10/02/2026` |

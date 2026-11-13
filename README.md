@@ -4,6 +4,9 @@ Sitio bancario **ficticio** para la PoC de Gaia Consultores RPA sobre la **autoc
 
 > ⚠️ **Sitio ficticio.** No es un banco real, no usa nombres, logos ni colores de bancos reales y todos los datos son inventados. El aviso "SITIO FICTICIO" queda visible en todas las pantallas.
 
+**Publicado en:** https://maria-gaia.github.io/pagina-bot-resiliente/
+Ejemplo de corrida: https://maria-gaia.github.io/pagina-bot-resiliente/site/index.html?escenario=1&seed=123&panel=0
+
 ## Estructura
 
 ```
