@@ -2,7 +2,7 @@
 
 Sitio bancario **ficticio** para la PoC de Gaia Consultores RPA sobre la **autocuración (self-healing) de Power Automate Desktop**. Simula cambios típicos de un portal (IDs, clases, textos, layout, iframe y carga diferida) para comprobar si un bot se recupera solo del error "Elemento no encontrado".
 
-> ⚠️ **Sitio ficticio.** No es un banco real, no usa nombres, logos ni colores de bancos reales y todos los datos son inventados. El aviso "SITIO FICTICIO" queda visible en todas las pantallas.
+> ⚠️ **Sitio ficticio.** No es un banco real, no usa nombres, logos ni colores de bancos reales y todos los datos son inventados.
 
 **Publicado en:** https://maria-gaia.github.io/pagina-bot-resiliente/
 **Vercel:** https://pagina-bot-resiliente.vercel.app/ (por ejemplo https://pagina-bot-resiliente.vercel.app/?escenario=1&seed=123&panel=0)
@@ -42,11 +42,12 @@ El sitio **no tiene dependencias ni build**. `tests/` usa Playwright, pero el si
 
 | Parámetro | Ejemplo | Efecto |
 |---|---|---|
-| `escenario` | `?escenario=1` | 0 Base · 1 Cambio de IDs · 2 Clases y textos · 3 Layout · 4 Combinado · 5 Iframe · 6 Carga diferida · 7 IDs autonumerados · 8 IDs duplicados · 9 Login en 2 pasos · 10 Avisos emergentes · 11 Carga muy lenta · 12 Captcha aritmético · 13 Sesión que expira |
+| `escenario` | `?escenario=1` | 0 Base · 1 Cambio de IDs · 2 Clases y textos · 3 Layout · 4 Combinado · 5 Iframe · 6 Carga diferida · 7 IDs autonumerados · 8 IDs duplicados · 9 Login en 2 pasos · 10 Avisos emergentes · 11 Carga muy lenta · 12 Captcha aritmético · 13 Sesión que expira · 14 Controles que cambian |
 | `seed` | `&seed=123` | Repite exactamente datos, IDs generados, latencia y retardos. Sin semilla se genera una al azar y se muestra en el panel. |
 | `latencia` | `&latencia=0` | Desactiva la latencia aleatoria (0,15–1,6 s por acción). |
 | `panel` | `&panel=0` | Oculta el panel de pruebas (recomendado en las corridas del bot). |
-| `escenario=auto` | `?escenario=auto&seed=123` | **El portal cambia solo:** en cada carga se elige al azar uno de los escenarios de cambio (por defecto 1, 2, 3, 4, 5, 7, 8). Se puede acotar con `&pool=1,2,4`. El escenario que tocó se ve en el panel y queda en la bitácora. |
+| `fecha`, `botonforma`, `botonpos` | `&fecha=calendario&botonforma=icono&botonpos=arriba` | Solo con el escenario 14 (o `&controles=1` sobre cualquier escenario): fuerza una variante. Fecha: `texto`, `iso` (aaaa-mm-dd), `nativa`, `selects` (día/mes/año), `calendario`. Botón: `boton`, `enlace`, `icono`, `input`. Posición: `abajo`, `derecha`, `arriba`, `en-linea`. Sin forzar, la variante sale de la semilla. |
+| `escenario=auto` | `?escenario=auto&seed=123` | **El portal cambia solo:** en cada carga se elige al azar uno de los escenarios de cambio (por defecto 1, 2, 3, 4, 5, 7, 8 y 14). Se puede acotar con `&pool=1,2,4`. El escenario que tocó se ve en el panel y queda en la bitácora. |
 
 El detalle de cada escenario está en [docs/guia-pruebas.md](docs/guia-pruebas.md#3-el-sitio-de-pruebas).
 

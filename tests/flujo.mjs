@@ -21,7 +21,7 @@ const DESDE = '01/02/2026';
 const HASTA = '10/02/2026';
 const CUENTA = '2200-4815-02';
 const NOMBRES = ['Base', 'Cambio de IDs', 'Cambio de clases y textos', 'Cambio de layout', 'Cambio combinado', 'Iframe', 'Carga diferida',
-  'IDs autonumerados', 'IDs duplicados', 'Login en 2 pasos', 'Avisos emergentes', 'Carga muy lenta', 'Captcha aritmético', 'Sesión que expira'];
+  'IDs autonumerados', 'IDs duplicados', 'Login en 2 pasos', 'Avisos emergentes', 'Carga muy lenta', 'Captcha aritmético', 'Sesión que expira', 'Controles que cambian'];
 
 // Selectores "malos" que un bot grabaría en el escenario 0 (se evalúan en el documento principal, como un selector sin iframe).
 // Resultado: "coincide" (elemento visible), "oculto" (coincide con un elemento invisible: el bot actuaría sobre el equivocado) o "se rompe".
@@ -90,15 +90,45 @@ async function ingresar(page, n, res, cap) {
   return true;
 }
 
+// ----- Escenario 14: llenar la fecha según el tipo de control que tocó -----
+async function llenarFecha(s, variante, etiqueta, ddmmaaaa) {
+  const [d, m, a] = ddmmaaaa.split('/');
+  const campo = s.getByLabel(etiqueta, { exact: true });
+  if (variante === 'texto') return campo.fill(ddmmaaaa);
+  if (variante === 'iso' || variante === 'nativa') return campo.fill(`${a}-${m}-${d}`);
+  if (variante === 'selects') {
+    await s.getByLabel(`${etiqueta} (día)`).selectOption(d);
+    await s.getByLabel(`${etiqueta} (mes)`).selectOption(m);
+    return s.getByLabel(`${etiqueta} (año)`).selectOption(a);
+  }
+  if (variante === 'calendario') {
+    await s.getByRole('button', { name: `Abrir calendario: ${etiqueta}` }).click();
+    const cal = s.getByRole('dialog', { name: `Calendario ${etiqueta}` });
+    for (let i = 0; i < (Number(a) - 2026) * 12 + Number(m) - 1; i++) await cal.getByRole('button', { name: 'Mes siguiente' }).click();
+    return cal.getByRole('button', { name: ddmmaaaa, exact: true }).click();
+  }
+  throw new Error('Variante de fecha desconocida: ' + variante);
+}
+const botonConsultarVariable = (s) => s.getByRole('button', { name: /^(Consultar|Buscar movimientos)$/ })
+  .or(s.getByRole('link', { name: /^(Consultar|Buscar movimientos)$/ }));
+
 async function irAMovimientosYConsultar(page, n, scope, res, esPrimera) {
   await R.menuMov(page).click();
   if (esPrimera) res.consultarPresenteAlInstante = (await page.evaluate(estadoSel(`document.querySelector('#btnConsultar')`))) === 'coincide';
   await R.cuenta(scope).waitFor({ timeout: 15000 });
   await R.cuenta(scope).selectOption(CUENTA);
-  await R.desde(scope).fill(DESDE);
-  await R.hasta(scope).fill(HASTA);
+  if (n === 14) {
+    // Escenario 14: el bot "inteligente" detecta el tipo de control de fecha y la forma del botón.
+    const v = await page.evaluate(() => window.bancoDemo.variantes);
+    res.variantes = `fecha=${v.fecha}, botón=${v.botonForma}/${v.botonPos}`;
+    await llenarFecha(scope, v.fecha, 'Fecha desde', DESDE);
+    await llenarFecha(scope, v.fecha, 'Fecha hasta', HASTA);
+  } else {
+    await R.desde(scope).fill(DESDE);
+    await R.hasta(scope).fill(HASTA);
+  }
   if (esPrimera) { res.pasos.push('cuenta y fechas'); res.fragiles = await fragiles(page); }
-  await R.consultar(scope).click();
+  await (n === 14 ? botonConsultarVariable(scope) : R.consultar(scope)).click();
   const filas = scope.locator('table tbody tr');
   await filas.first().waitFor({ timeout: 20000 });
   return filas.count();
@@ -199,6 +229,32 @@ async function verificacionesExtra(browser) {
   const page = await ctx.newPage();
   const idUsuario = async (url) => { await page.goto(url); return page.getByLabel(/Usuario/).getAttribute('id'); };
 
+  // Escenario 14: cada tipo de fecha, con distintas formas y posiciones del botón, debe permitir consultar.
+  const combos = [['texto', 'boton', 'derecha'], ['iso', 'enlace', 'arriba'], ['nativa', 'icono', 'en-linea'], ['selects', 'input', 'derecha'], ['calendario', 'enlace', 'en-linea']];
+  for (const [fecha, forma, pos] of combos) {
+    await page.goto(`${SITIO}?escenario=14&seed=123&latencia=0&panel=0&fecha=${fecha}&botonforma=${forma}&botonpos=${pos}`);
+    await page.getByLabel('Usuario', { exact: true }).fill('demo'); await page.getByLabel('Clave', { exact: true }).fill('Demo2026!');
+    await page.getByRole('button', { name: 'Ingresar' }).click();
+    await page.getByRole('link', { name: 'Movimientos', exact: true }).click();
+    await page.getByLabel('Cuenta', { exact: true }).selectOption(CUENTA);
+    await llenarFecha(page, fecha, 'Fecha desde', DESDE);
+    await llenarFecha(page, fecha, 'Fecha hasta', HASTA);
+    await botonConsultarVariable(page).click();
+    const filas = page.locator('table tbody tr');
+    await filas.first().waitFor({ timeout: 10000 }).catch(() => {});
+    const nFilas = await filas.count();
+    await page.screenshot({ path: path.join(CAPTURAS, `esc14_${fecha}_${forma}_${pos}.png`) });
+    v.push({ prueba: `Esc. 14: fecha ${fecha}, botón ${forma} (${pos})`, ok: nFilas === 6, detalle: `${nFilas} filas` });
+  }
+  // Escenario 14: escribir dd/mm/aaaa en el campo aaaa-mm-dd (lo que haría el bot del escenario 0) debe dar error de formato.
+  await page.goto(`${SITIO}?escenario=14&seed=123&latencia=0&panel=0&fecha=iso`);
+  await page.getByLabel('Usuario', { exact: true }).fill('demo'); await page.getByLabel('Clave', { exact: true }).fill('Demo2026!');
+  await page.getByRole('button', { name: 'Ingresar' }).click();
+  await page.getByRole('link', { name: 'Movimientos', exact: true }).click();
+  await page.getByLabel('Fecha desde', { exact: true }).fill(DESDE); await page.getByLabel('Fecha hasta', { exact: true }).fill(HASTA);
+  await botonConsultarVariable(page).click();
+  v.push({ prueba: 'Esc. 14: dd/mm/aaaa en campo aaaa-mm-dd da error de formato', ok: (await page.locator('[role=alert]').first().innerText()).includes('aaaa-mm-dd') });
+
   // Semilla: mismos IDs con la misma semilla, distintos con otra.
   const a = await idUsuario(`${SITIO}?escenario=1&seed=123`);
   const b = await idUsuario(`${SITIO}?escenario=1&seed=123`);
@@ -227,7 +283,6 @@ async function verificacionesExtra(browser) {
   v.push({ prueba: 'Semilla fija repite datos', ok: ref1 === ref2, detalle: ref1.split('\t').slice(0, 3).join(' | ') });
 
   // Panel: aviso visible, exportar bitácora.
-  v.push({ prueba: 'Aviso "sitio ficticio" visible', ok: await page.getByText('SITIO FICTICIO').isVisible() });
   await page.click('[data-panel="alternar"]'); // el panel arranca colapsado
   await page.screenshot({ path: path.join(CAPTURAS, 'panel_pruebas.png') });
   const [desc] = await Promise.all([page.waitForEvent('download'), page.click('[data-panel="exportar"]')]);
@@ -277,7 +332,7 @@ await browser.close();
 const marca = (v) => (v === 'coincide' ? 'coincide' : v === 'oculto' ? '**oculto**' : v === 'se rompe' ? '**se rompe**' : '-');
 let md = `# Resultados de la prueba automática (Playwright headless)\n\nFecha: ${new Date().toISOString()}\nSemilla: ${SEMILLA} · Cuenta ${CUENTA} · ${DESDE} a ${HASTA}\n\n`;
 md += `## Flujo completo con localizadores resistentes\n\n| Esc. | Nombre | Resultado | Filas | Detalles leídos | CSV | Tiempo (s) | Pasos / error |\n|---|---|---|---|---|---|---|---|\n`;
-for (const r of resultados) md += `| ${r.escenario} | ${r.nombre} | ${r.ok ? (r.controlada ? 'OK (falla controlada)' : 'OK') : 'FALLA'} | ${r.filas ?? '-'} | ${r.ordenantes?.length ?? '-'} | ${r.csv ? r.csv.filas + ' filas' : '-'} | ${r.segundos} | ${r.error ?? r.pasos.join(' → ')} |\n`;
+for (const r of resultados) md += `| ${r.escenario} | ${r.nombre} | ${r.ok ? (r.controlada ? 'OK (falla controlada)' : 'OK') : 'FALLA'} | ${r.filas ?? '-'} | ${r.ordenantes?.length ?? '-'} | ${r.csv ? r.csv.filas + ' filas' : '-'} | ${r.segundos} | ${r.variantes ? `[${r.variantes}] ` : ""}${r.error ?? r.pasos.join(" → ")} |\n`;
 md += `\n## Selectores frágiles capturados en el escenario 0 (evaluados en el documento principal)\n\n"oculto" = el selector coincide, pero con un elemento invisible (el bot actuaría sobre el equivocado).\n\n| Esc. | ${Object.keys(FRAGILES).join(' | ')} | #detOrdenante | #btnConsultar visible al abrir la vista |\n|---|${Object.keys(FRAGILES).map(() => '---').join('|')}|---|---|\n`;
 for (const r of resultados) md += `| ${r.escenario} | ${r.fragiles ? Object.values(r.fragiles).map(marca).join(' | ') : Object.keys(FRAGILES).map(() => '-').join(' | ')} | ${marca(r.detOrdenanteId)} | ${r.consultarPresenteAlInstante === undefined ? '-' : r.consultarPresenteAlInstante ? 'sí' : 'no'} |\n`;
 const notas = resultados.filter((r) => r.fragilesLogin || r.loginListoS);

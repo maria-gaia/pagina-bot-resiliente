@@ -38,11 +38,11 @@ Según la documentación oficial (revisada el 13/11/2026, página con fecha 28/1
 
 | Parámetro | Valores | Uso |
 |---|---|---|
-| `escenario` | 0–13 | Tipo de cambio del portal (tabla siguiente). |
+| `escenario` | 0–14 o `auto` | Tipo de cambio del portal (tabla siguiente). |
 | `seed` | entero, p. ej. `123` | Fija datos, IDs generados, latencia y retardos. **Usar siempre `seed=123` en la PoC.** |
 | `latencia` | `0` | Desactiva la latencia aleatoria (útil al capturar elementos). |
 | `panel` | `0` | Oculta el panel de pruebas (recomendado durante las corridas del bot). |
-| `escenario=auto` | `auto` (+ `pool=1,2,4` opcional) | En **cada carga** elige al azar un escenario de cambio. Útil para una demo "en vivo" de un portal que cambia sin avisar. Para la matriz usar escenarios fijos y, en modo auto, sacar de la bitácora qué escenario tocó en cada corrida (evento "Modo auto: escenario elegido…"). |
+| `escenario=auto` | `auto` (+ `pool=1,2,4` opcional) | En **cada carga** elige al azar un escenario de cambio. Útil para una demo "en vivo" de un portal que cambia sin avisar. Para la matriz usar escenarios fijos y, en modo auto, sacar de la bitácora qué escenario tocó en cada corrida (evento "Modo auto: escenario elegido…"; en el 14 también "Controles: fecha=…, botón=…"). |
 
 | Esc. | Nombre | Qué cambia respecto al escenario 0 |
 |---|---|---|
@@ -65,6 +65,7 @@ Según la documentación oficial (revisada el 13/11/2026, página con fecha 28/1
 | 11 | Carga muy lenta | El formulario de login aparece a los 10–15 s y cada consulta tarda 6–10 s. | Portales que tardan entre 7 y 14 s en mostrar el primer campo. |
 | 12 | Captcha aritmético | Operación dibujada en un canvas, que cambia en cada intento (no depende de la semilla). | Captcha de suma en imagen en el login. |
 | 13 | Sesión que expira | La sesión expira **una vez**, al abrir el detalle n.º 2–4 (fijo por semilla), y vuelve al login. | Expiración de sesión a mitad de un proceso largo. |
+| 14 | Controles que cambian | Cambia el **tipo** de campo de fecha (texto dd/mm/aaaa, texto aaaa-mm-dd, selector nativo, listas día/mes/año o calendario de solo lectura) y la **forma y posición** del botón Consultar (botón, enlace, solo ícono, input; abajo, derecha, arriba o en la fila de filtros). Variante fija por semilla o forzada con `&fecha=`, `&botonforma=`, `&botonpos=`. | Rediseños donde el control cambia de tipo, no solo de selector. |
 
 Credenciales demo: usuario **`demo`**, clave **`Demo2026!`**.
 Datos disponibles: **01/01/2026 al 31/03/2026**. Rango sugerido para la PoC: cuenta **2200-4815-02**, del **01/02/2026** al **10/02/2026** (6 movimientos con `seed=123`).
@@ -165,6 +166,7 @@ Evidencia de Playwright con selectores CSS equivalentes (`tests/resultados.md`):
 - **Escenario 7 (autonumerados):** igual que el 1 para un selector por ID, pero además la numeración **se desplaza** entre vistas. Ver si la reparación se repite en cada corrida.
 - **Escenario 8 (duplicados):** el selector por ID **no falla**: encuentra la copia oculta. Sin autocuración, PAD puede escribir en el campo oculto o leer un ordenante vacío **sin dar error**. La autocuración solo se activa ante "Elemento no encontrado", así que aquí probablemente **no actúe**. Es el caso que más justifica las validaciones de negocio.
 - **Escenario 9 (2 pasos):** es un cambio de **flujo**, no de selector. La autocuración no inventa el clic en *Continuar*: el flujo debe contemplarlo (p. ej. "si existe Continuar, hacer clic").
+- **Escenario 14 (controles que cambian):** la autocuración puede encontrar el botón aunque cambie de lugar o de forma (botón → enlace → ícono), pero **no puede cambiar la acción del flujo**. Si la fecha pasa de texto a listas día/mes/año o a un calendario de solo lectura, "Rellenar campo de texto" deja de servir aunque el elemento se encuentre, y si pasa a aaaa-mm-dd el portal rechaza el formato (error de negocio, no "Elemento no encontrado"). Anotar por variante: encontrado sí/no, acción válida sí/no.
 - **Escenario 10 (avisos):** el aviso aparece mientras el bot escribe. Puede no producir "Elemento no encontrado" (el elemento existe, solo está tapado). Se resuelve con una rutina "si aparece el aviso, aceptar".
 - **Escenario 11 (lento):** se resuelve con esperas de 20–30 s. Con esperas cortas, la autocuración se activaría sobre un elemento que todavía no existe.
 - **Escenario 12 (captcha):** **fuera del alcance** del RPA y de la autocuración. El resultado esperado es una **falla controlada** (mensaje "El resultado de la operación es incorrecto"), que se registra y notifica. Para un banco con captcha, la vía es negociar un canal (API, archivo, usuario sin captcha).
