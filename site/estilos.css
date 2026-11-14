@@ -1,4 +1,4 @@
-/* Banco Demo Andino — sitio ficticio para pruebas RPA.
+/* Banco Demo — sitio ficticio para pruebas RPA.
    Paleta neutra (grafito + ocre apagado), sin colores corporativos de bancos reales.
    Cada regla de componente lista el nombre "base" (escenario 0) y el nombre
    ofuscado que se usa en los escenarios 2 y 4 (cambio de clases). */
@@ -112,6 +112,17 @@ h2 { font-size: 18px; }
 input[type="text"], input[type="password"], select {
   font: inherit; color: inherit; background: #fff;
   border: 1px solid var(--borde); border-radius: 6px; padding: 9px 10px; min-width: 0;
+  height: 42px;
+}
+/* Flecha propia para la lista: separada del borde y misma altura que los campos. */
+select {
+  -webkit-appearance: none; appearance: none;
+  padding-right: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%235d6168' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 12px 8px;
+  cursor: pointer;
 }
 input:focus, select:focus, button:focus-visible, a:focus-visible { outline: 2px solid var(--acento); outline-offset: 1px; }
 .fila-filtros, .Flt_row__w9Ae1 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 14px; }
@@ -237,4 +248,54 @@ body.dentro-iframe .contenido { padding: 16px; }
   .login-dos { grid-template-columns: 1fr; }
   .lista-detalle { grid-template-columns: 1fr; }
   .encabezado, .Hdr_bar__q81Lm { padding: 12px 16px; }
+}
+
+/* ---------- Escenarios 7–13 ---------- */
+[hidden] { display: none !important; }
+.boton-span { display: inline-block; text-align: center; user-select: none; }   /* 9: "botón" que es un span */
+.usuario-elegido { font-size: 14px; color: var(--texto-suave); margin: 0 0 12px; }
+.captcha-fila { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }   /* 12 */
+.captcha-img { border: 1px solid var(--borde); border-radius: 6px; }
+.captcha-refrescar { padding: 6px 12px; }
+.aviso-fondo {   /* 10: avisos que tapan la página (debajo del aviso de sitio ficticio) */
+  position: fixed; inset: 0; z-index: 880; background: rgba(20,22,26,.5);
+  display: grid; place-items: end center; padding: 16px;
+}
+.aviso-caja {
+  background: var(--superficie); border-radius: 10px; width: 100%; max-width: 640px;
+  padding: 18px 20px; box-shadow: 0 10px 40px rgba(0,0,0,.25); margin-bottom: 24px;
+}
+.aviso-caja h2 { font-size: 17px; }
+.aviso-caja p { margin: 0 0 14px; font-size: 14px; }
+
+/* ---------- Escenario 14: controles que cambian ---------- */
+input[type="date"] { font: inherit; color: inherit; background: #fff; border: 1px solid var(--borde); border-radius: 6px; padding: 8px 10px; height: 42px; min-width: 0; }
+.campo-fecha-partes { border: 0; padding: 0; margin: 0 0 14px; min-width: 0; }
+.campo-fecha-partes legend { font-size: 13px; font-weight: 600; color: var(--texto-suave); padding: 0; margin-bottom: 4px; }
+.fecha-partes { display: grid; grid-template-columns: 0.8fr 1.4fr 1fr; gap: 6px; }
+.fecha-partes select { padding-left: 8px; padding-right: 30px; background-position: right 10px center; }
+.cal-envoltura { position: relative; display: flex; }
+.cal-envoltura input { flex: 1; border-top-right-radius: 0; border-bottom-right-radius: 0; cursor: pointer; background: #fff; }
+.btn-cal { display: grid; place-items: center; width: 44px; height: 42px; border: 1px solid var(--borde); border-left: 0; border-radius: 0 6px 6px 0; background: var(--superficie-2); color: var(--marca); cursor: pointer; }
+.btn-cal:hover { background: var(--acento-suave); }
+.cal-popup { position: absolute; top: calc(100% + 6px); left: 0; z-index: 60; width: 272px; background: #fff; border: 1px solid var(--borde); border-radius: 8px; box-shadow: 0 8px 28px rgba(0,0,0,.16); padding: 10px; }
+.cal-cab { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 14px; }
+.cal-nav { width: 30px; height: 30px; border: 1px solid var(--borde); border-radius: 6px; background: #fff; cursor: pointer; font-size: 16px; line-height: 1; }
+.cal-grilla { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+.cal-dia-sem { text-align: center; font-size: 11px; color: var(--texto-suave); padding: 2px 0; }
+.cal-dia { height: 32px; border: 0; border-radius: 6px; background: var(--superficie-2); cursor: pointer; font: inherit; font-size: 13px; font-variant-numeric: tabular-nums; }
+.cal-dia:hover { background: var(--acento-suave); }
+.acciones-derecha { justify-content: flex-end; }
+.fila-fechas-partes { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.45fr) minmax(0, 1.45fr); }
+.fila-fechas-partes.fila-con-boton { grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr) minmax(0, 1.45fr) auto; }
+.form-variable .fila-acciones:first-child, .form-variable .Act_row__c5Rb8:first-child { margin-bottom: 14px; }
+.fila-con-boton { grid-template-columns: 2fr 1fr 1fr auto; align-items: end; }
+.campo-boton .btn, .campo-boton .enlace-accion { height: 42px; }
+.btn-icono { width: 46px; height: 42px; padding: 0; display: inline-grid; place-items: center; }
+.enlace-accion { display: inline-flex; align-items: center; gap: 4px; color: var(--marca); font-weight: 650; text-decoration: underline; text-underline-offset: 3px; padding: 9px 4px; }
+.enlace-accion::after { content: "›"; text-decoration: none; font-size: 18px; line-height: 1; }
+.enlace-accion:hover { color: var(--acento); }
+@media (max-width: 720px) {
+  .fila-con-boton, .fila-fechas-partes, .fila-fechas-partes.fila-con-boton { grid-template-columns: 1fr; }
+  .cal-popup { width: min(272px, calc(100vw - 48px)); }
 }
