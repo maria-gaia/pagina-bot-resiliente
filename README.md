@@ -4,9 +4,16 @@ Sitio bancario **ficticio** para la PoC de Gaia Consultores RPA sobre la **autoc
 
 > ⚠️ **Sitio ficticio.** No es un banco real, no usa nombres, logos ni colores de bancos reales y todos los datos son inventados.
 
-**Publicado en:** https://maria-gaia.github.io/pagina-bot-resiliente/
-**Vercel:** https://pagina-bot-resiliente.vercel.app/ (por ejemplo https://pagina-bot-resiliente.vercel.app/?escenario=1&seed=123&panel=0)
-Ejemplo de corrida: https://maria-gaia.github.io/pagina-bot-resiliente/site/index.html?escenario=1&seed=123&panel=0
+## Uso rápido (2 direcciones)
+
+| Paso | Dirección | Qué hace |
+|---|---|---|
+| 1. **Mapear** los elementos y armar el bot en PAD | https://pagina-bot-resiliente.vercel.app/mapear | Versión **estable**: siempre igual, nunca cambia. |
+| 2. **Probar** el bot (desde la consola, con autocuración) | https://pagina-bot-resiliente.vercel.app/ | **Se mueve sola**: en cada carga cambia IDs, textos, layout, iframe o el tipo de controles. |
+
+Credenciales: usuario `demo` · clave `Demo2026!`. Para un cambio concreto y repetible (evidencia de la matriz), usar `?escenario=N&seed=123` (ver más abajo).
+
+También publicado en GitHub Pages: https://maria-gaia.github.io/pagina-bot-resiliente/ (y `/mapear`).
 
 ## Estructura
 

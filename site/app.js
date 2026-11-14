@@ -55,7 +55,8 @@
   // del conjunto (por defecto los cambios que la autocuración podría resolver). Se puede
   // acotar con &pool=1,2,4. El escenario elegido queda en el panel y en la bitácora.
   var POOL_AUTO_DEFECTO = [1, 2, 3, 4, 5, 7, 8, 14];
-  var modoAuto = (params.get('escenario') || '').toLowerCase() === 'auto';
+  // Sin ?escenario en la URL, el sitio "se mueve solo" (modo auto). Para mapear: ?escenario=0 o /mapear.
+  var modoAuto = !params.get('escenario') || params.get('escenario').toLowerCase() === 'auto';
   var poolAuto = POOL_AUTO_DEFECTO;
   if (modoAuto && params.get('pool')) {
     var poolUrl = params.get('pool').split(',').map(function (x) { return parseInt(x, 10); })
