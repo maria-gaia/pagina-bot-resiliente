@@ -6,7 +6,7 @@
  *   ?escenario=0..6   Escenario de cambio del portal (ver ESCENARIOS).
  *   ?seed=123         Semilla fija: mismos datos, mismos IDs, misma latencia y mismos retardos.
  *   ?latencia=0       Desactiva la latencia aleatoria.
- *   ?panel=0          Oculta el panel de pruebas.
+ *   ?panel=1          Muestra el panel de pruebas (oculto por defecto).
  */
 (function () {
   'use strict';
@@ -73,7 +73,7 @@
   var semillaFija = /^\d{1,9}$/.test(semillaTxt);
   var semilla = semillaFija ? parseInt(semillaTxt, 10) : 100000 + Math.floor(Math.random() * 900000);
   var latenciaOn = params.get('latencia') !== '0';
-  var panelOn = params.get('panel') !== '0';
+  var panelOn = params.get('panel') === '1'; // el panel solo aparece con ?panel=1
 
   // =====================================================================
   // 3. Aleatoriedad reproducible
@@ -1105,7 +1105,7 @@
     if (esc === 'auto' && modoAuto && params.get('pool')) u.searchParams.set('pool', poolAuto.join(','));
     if (sem) u.searchParams.set('seed', sem);
     if (!lat) u.searchParams.set('latencia', '0');
-    if (!panelOn) u.searchParams.set('panel', '0');
+    if (panelOn) u.searchParams.set('panel', '1');
     return u.toString();
   }
 

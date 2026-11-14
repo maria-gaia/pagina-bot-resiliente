@@ -1,19 +1,19 @@
 # Resultados de la prueba automática (Playwright headless)
 
-Fecha: 2026-11-14T00:45:21.185Z
+Fecha: 2026-11-14T00:59:07.662Z
 Semilla: 123 · Cuenta 2200-4815-02 · 01/02/2026 a 10/02/2026
 
 ## Flujo completo con localizadores resistentes
 
 | Esc. | Nombre | Resultado | Filas | Detalles leídos | CSV | Tiempo (s) | Pasos / error |
 |---|---|---|---|---|---|---|---|
-| 0 | Base | OK | 6 | 6 | 6 filas | 7.6 | login → cuenta y fechas → consulta (6 filas) → detalle x6 → descarga CSV → cierre de sesión |
-| 1 | Cambio de IDs | OK | 6 | 6 | 6 filas | 7.3 | login → cuenta y fechas → consulta (6 filas) → detalle x6 → descarga CSV → cierre de sesión |
-| 2 | Cambio de clases y textos | OK | 6 | 6 | 6 filas | 7.2 | login → cuenta y fechas → consulta (6 filas) → detalle x6 → descarga CSV → cierre de sesión |
-| 3 | Cambio de layout | OK | 6 | 6 | 6 filas | 7.2 | login → cuenta y fechas → consulta (6 filas) → detalle x6 → descarga CSV → cierre de sesión |
-| 4 | Cambio combinado | OK | 6 | 6 | 6 filas | 7.2 | login → cuenta y fechas → consulta (6 filas) → detalle x6 → descarga CSV → cierre de sesión |
-| 5 | Iframe | OK | 6 | 6 | 6 filas | 7.3 | login → cuenta y fechas → consulta (6 filas) → detalle x6 → descarga CSV → cierre de sesión |
-| 6 | Carga diferida | OK | 6 | 6 | 6 filas | 20.3 | login → cuenta y fechas → consulta (6 filas) → detalle x6 → descarga CSV → cierre de sesión |
+| 0 | Base | OK | 6 | 6 | 6 filas | 7.5 | login → cuenta y fechas → consulta (6 filas) → detalle x6 → descarga CSV → cierre de sesión |
+| 1 | Cambio de IDs | OK | 6 | 6 | 6 filas | 7.2 | login → cuenta y fechas → consulta (6 filas) → detalle x6 → descarga CSV → cierre de sesión |
+| 2 | Cambio de clases y textos | OK | 6 | 6 | 6 filas | 7.1 | login → cuenta y fechas → consulta (6 filas) → detalle x6 → descarga CSV → cierre de sesión |
+| 3 | Cambio de layout | OK | 6 | 6 | 6 filas | 7.1 | login → cuenta y fechas → consulta (6 filas) → detalle x6 → descarga CSV → cierre de sesión |
+| 4 | Cambio combinado | OK | 6 | 6 | 6 filas | 7.1 | login → cuenta y fechas → consulta (6 filas) → detalle x6 → descarga CSV → cierre de sesión |
+| 5 | Iframe | OK | 6 | 6 | 6 filas | 7.2 | login → cuenta y fechas → consulta (6 filas) → detalle x6 → descarga CSV → cierre de sesión |
+| 6 | Carga diferida | OK | 6 | 6 | 6 filas | 20.7 | login → cuenta y fechas → consulta (6 filas) → detalle x6 → descarga CSV → cierre de sesión |
 | 7 | IDs autonumerados | OK | 6 | 6 | 6 filas | 7.2 | login → cuenta y fechas → consulta (6 filas) → detalle x6 → descarga CSV → cierre de sesión |
 | 8 | IDs duplicados | OK | 6 | 6 | 6 filas | 7.1 | login → cuenta y fechas → consulta (6 filas) → detalle x6 → descarga CSV → cierre de sesión |
 | 9 | Login en 2 pasos | OK | 6 | 6 | 6 filas | 7.9 | login → cuenta y fechas → consulta (6 filas) → detalle x6 → descarga CSV → cierre de sesión |
@@ -21,7 +21,7 @@ Semilla: 123 · Cuenta 2200-4815-02 · 01/02/2026 a 10/02/2026
 | 11 | Carga muy lenta | OK | 6 | 6 | 6 filas | 42.5 | login → cuenta y fechas → consulta (6 filas) → detalle x6 → descarga CSV → cierre de sesión |
 | 12 | Captcha aritmético | OK (falla controlada) | - | - | - | 1.1 | login rechazado por captcha (falla controlada esperada) |
 | 13 | Sesión que expira | OK | 6 | 6 | 6 filas | 9.0 | login → cuenta y fechas → consulta (6 filas) → sesión expirada en el detalle 3 → reingreso → detalle x6 → descarga CSV → cierre de sesión |
-| 14 | Controles que cambian | OK | 6 | 6 | 6 filas | 7.3 | [fecha=selects, botón=enlace/en-linea] login → cuenta y fechas → consulta (6 filas) → detalle x6 → descarga CSV → cierre de sesión |
+| 14 | Controles que cambian | OK | 6 | 6 | 6 filas | 7.1 | [fecha=selects, botón=enlace/en-linea] login → cuenta y fechas → consulta (6 filas) → detalle x6 → descarga CSV → cierre de sesión |
 
 ## Selectores frágiles capturados en el escenario 0 (evaluados en el documento principal)
 
@@ -62,7 +62,7 @@ Notas: esc. 7: #usuario → se rompe · esc. 8: #usuario → oculto · esc. 11: 
 | Clave incorrecta muestra error | OK |  |
 | Fecha mal formateada muestra error | OK |  |
 | Semilla fija repite datos | OK | 01/02/2026 | Transferencia enviada | TRX26000146 |
-| Bitácora exportada a CSV | OK | bitacora_20261114_014520.csv (54 eventos) |
+| Bitácora exportada a CSV | OK | bitacora_20261114_015907.csv (54 eventos) |
 | Funciona con localStorage bloqueado | OK |  |
 | index.html raíz redirige a site/ con parámetros | OK |  |
 | Sin scroll horizontal en móvil (375px) | OK | scrollWidth=375 |

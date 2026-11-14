@@ -41,7 +41,7 @@ Según la documentación oficial (revisada el 13/11/2026, página con fecha 28/1
 | `escenario` | 0–14 o `auto` | Tipo de cambio del portal (tabla siguiente). |
 | `seed` | entero, p. ej. `123` | Fija datos, IDs generados, latencia y retardos. **Usar siempre `seed=123` en la PoC.** |
 | `latencia` | `0` | Desactiva la latencia aleatoria (útil al capturar elementos). |
-| `panel` | `0` | Oculta el panel de pruebas (recomendado durante las corridas del bot). |
+| `panel` | `1` | Muestra el panel de pruebas (oculto por defecto): escenario actual y exportación de la bitácora. |
 | `escenario=auto` | `auto` (+ `pool=1,2,4` opcional) | En **cada carga** elige al azar un escenario de cambio. Útil para una demo "en vivo" de un portal que cambia sin avisar. Para la matriz usar escenarios fijos y, en modo auto, sacar de la bitácora qué escenario tocó en cada corrida (evento "Modo auto: escenario elegido…"; en el 14 también "Controles: fecha=…, botón=…"). |
 
 | Esc. | Nombre | Qué cambia respecto al escenario 0 |
@@ -152,9 +152,9 @@ Evidencia de Playwright con selectores CSS equivalentes (`tests/resultados.md`):
 ### 6.4 Dónde ver el resultado de la recuperación
 - **Portal de Power Automate** → *Mis flujos* → *Flujos de escritorio* → (flujo) → **ejecución** concreta. En la página de la ejecución aparece un **resumen de la actividad de autocuración** con el detalle de **hasta 3 intentos correctos**. Hoy **no** se muestra a nivel de cada acción.
 - **Registros locales** (si se activó la clave del Registro): propiedad **`repairWithAIInfo`** en el registro de la acción. Indica si hubo intento de reparación, si funcionó y **el selector generado por IA** usado en tiempo de ejecución. Copiarlo a la columna `selector_generado_por_ia` de la matriz.
-- **Bitácora del sitio:** en el panel de pruebas, **Exportar bitácora CSV**. Registra cada login, consulta, detalle abierto/cerrado, descarga y cierre de sesión con hora en milisegundos, escenario y semilla. Sirve para demostrar qué hizo realmente el bot en el portal.
+- **Bitácora del sitio:** en el panel de pruebas (`&panel=1`), **Exportar bitácora CSV**. Registra cada login, consulta, detalle abierto/cerrado, descarga y cierre de sesión con hora en milisegundos, escenario y semilla. Sirve para demostrar qué hizo realmente el bot en el portal.
   - La bitácora se guarda en el `localStorage` del navegador y se comparte entre corridas. Usar **Limpiar** antes de cada serie de pruebas.
-  - Si se ocultó el panel (`panel=0`), abrir la misma URL sin ese parámetro para exportar.
+  - El panel está oculto por defecto: abrir la misma URL agregando `&panel=1` para exportar.
 
 ### 6.5 Qué observar (hipótesis a validar)
 - **Escenario 1 (IDs):** el caso ideal de la autocuración (elemento visualmente igual, selector distinto).

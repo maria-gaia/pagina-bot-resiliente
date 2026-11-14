@@ -275,7 +275,7 @@ async function verificacionesExtra(browser) {
   v.push({ prueba: 'Fecha mal formateada muestra error', ok: (await page.locator('#msgFiltros').innerText()).includes('dd/mm/aaaa') });
   await page.fill('#fechaDesde', '01/02/2026'); await page.click('#btnConsultar');
   const ref1 = await page.locator('#tablaMovimientos tbody tr').first().innerText();
-  await page.goto(`${SITIO}?escenario=0&seed=123&latencia=0`);
+  await page.goto(`${SITIO}?escenario=0&seed=123&latencia=0&panel=1`);
   await page.fill('#usuario', 'demo'); await page.fill('#clave', 'Demo2026!'); await page.click('#btnIngresar');
   await page.click('#navMovimientos');
   await page.fill('#fechaDesde', '01/02/2026'); await page.fill('#fechaHasta', '10/02/2026'); await page.click('#btnConsultar');

@@ -50,15 +50,15 @@ El sitio **no tiene dependencias ni build**. `tests/` usa Playwright, pero el si
 | Parámetro | Ejemplo | Efecto |
 |---|---|---|
 | `escenario` | `?escenario=1` | 0 Base · 1 Cambio de IDs · 2 Clases y textos · 3 Layout · 4 Combinado · 5 Iframe · 6 Carga diferida · 7 IDs autonumerados · 8 IDs duplicados · 9 Login en 2 pasos · 10 Avisos emergentes · 11 Carga muy lenta · 12 Captcha aritmético · 13 Sesión que expira · 14 Controles que cambian |
-| `seed` | `&seed=123` | Repite exactamente datos, IDs generados, latencia y retardos. Sin semilla se genera una al azar y se muestra en el panel. |
+| `seed` | `&seed=123` | Repite exactamente datos, IDs generados, latencia y retardos. Sin semilla se genera una al azar (visible con `&panel=1`). |
 | `latencia` | `&latencia=0` | Desactiva la latencia aleatoria (0,15–1,6 s por acción). |
-| `panel` | `&panel=0` | Oculta el panel de pruebas (recomendado en las corridas del bot). |
+| `panel` | `&panel=1` | Muestra el panel de pruebas (oculto por defecto). Sirve para ver qué escenario tocó y **exportar la bitácora** como evidencia. |
 | `fecha`, `botonforma`, `botonpos` | `&fecha=calendario&botonforma=icono&botonpos=arriba` | Solo con el escenario 14 (o `&controles=1` sobre cualquier escenario): fuerza una variante. Fecha: `texto`, `iso` (aaaa-mm-dd), `nativa`, `selects` (día/mes/año), `calendario`. Botón: `boton`, `enlace`, `icono`, `input`. Posición: `abajo`, `derecha`, `arriba`, `en-linea`. Sin forzar, la variante sale de la semilla. |
 | `escenario=auto` | `?escenario=auto&seed=123` | **El portal cambia solo:** en cada carga se elige al azar uno de los escenarios de cambio (por defecto 1, 2, 3, 4, 5, 7, 8 y 14). Se puede acotar con `&pool=1,2,4`. El escenario que tocó se ve en el panel y queda en la bitácora. |
 
 El detalle de cada escenario está en [docs/guia-pruebas.md](docs/guia-pruebas.md#3-el-sitio-de-pruebas).
 
-**Panel de pruebas** (abajo a la derecha, colapsado por defecto): permite cambiar escenario, semilla y latencia, copiar la URL reproducible y ver o **exportar la bitácora a CSV** (`fecha;escenario;semilla;evento`). La bitácora se guarda en `localStorage`. Si el navegador lo bloquea, el sitio sigue funcionando, pero la bitácora solo dura mientras la página esté abierta.
+**Panel de pruebas** (oculto por defecto; aparece abajo a la derecha agregando `&panel=1` a la URL): permite cambiar escenario, semilla y latencia, copiar la URL reproducible y ver o **exportar la bitácora a CSV** (`fecha;escenario;semilla;evento`). La bitácora se guarda en `localStorage`. Si el navegador lo bloquea, el sitio sigue funcionando, pero la bitácora solo dura mientras la página esté abierta.
 
 ## Publicarlo en GitHub Pages
 
