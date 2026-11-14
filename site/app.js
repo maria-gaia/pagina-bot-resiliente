@@ -913,7 +913,7 @@
         filtros.push(h('div', { class: 'campo campo-boton' }, btn));
         acciones = h('div', { class: 'fila-acciones' }, btnLimpiar);
       } else acciones = h('div', { class: 'fila-acciones' }, [btn, btnLimpiar]);
-      var fila = h('div', { class: 'fila-filtros' + (pos === 'en-linea' ? ' fila-con-boton' : '') }, filtros);
+      var fila = h('div', { class: 'fila-filtros' + (pos === 'en-linea' ? ' fila-con-boton' : '') + (variantes.fecha === 'selects' ? ' fila-fechas-partes' : '') }, filtros);
       var form = h('form', { id: 'formFiltros', novalidate: true, class: 'form-variable' }, pos === 'arriba' ? [acciones, fila] : [fila, acciones]);
       form.addEventListener('submit', function (e) { e.preventDefault(); consultar(btn); });
       return form;

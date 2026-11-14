@@ -286,6 +286,8 @@ input[type="date"] { font: inherit; color: inherit; background: #fff; border: 1p
 .cal-dia { height: 32px; border: 0; border-radius: 6px; background: var(--superficie-2); cursor: pointer; font: inherit; font-size: 13px; font-variant-numeric: tabular-nums; }
 .cal-dia:hover { background: var(--acento-suave); }
 .acciones-derecha { justify-content: flex-end; }
+.fila-fechas-partes { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.45fr) minmax(0, 1.45fr); }
+.fila-fechas-partes.fila-con-boton { grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr) minmax(0, 1.45fr) auto; }
 .form-variable .fila-acciones:first-child, .form-variable .Act_row__c5Rb8:first-child { margin-bottom: 14px; }
 .fila-con-boton { grid-template-columns: 2fr 1fr 1fr auto; align-items: end; }
 .campo-boton .btn, .campo-boton .enlace-accion { height: 42px; }
@@ -294,6 +296,6 @@ input[type="date"] { font: inherit; color: inherit; background: #fff; border: 1p
 .enlace-accion::after { content: "›"; text-decoration: none; font-size: 18px; line-height: 1; }
 .enlace-accion:hover { color: var(--acento); }
 @media (max-width: 720px) {
-  .fila-con-boton { grid-template-columns: 1fr; }
+  .fila-con-boton, .fila-fechas-partes, .fila-fechas-partes.fila-con-boton { grid-template-columns: 1fr; }
   .cal-popup { width: min(272px, calc(100vw - 48px)); }
 }
