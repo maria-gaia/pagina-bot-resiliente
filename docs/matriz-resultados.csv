@@ -181,3 +181,16 @@
 13;Sesión que expira;Clic Cerrar detalle;button#btnCerrarDetalle;falla en detalle n.º 2–4 (sesión);;;;;
 13;Sesión que expira;Clic Descargar CSV;button#btnDescargarCsv;OK;;;;;
 13;Sesión que expira;Clic Cerrar sesión;button#btnSalir;OK;;;;;
+14;Controles que cambian;Rellenar usuario;input#usuario;OK;;;;;anotar variante (fecha/botón/posición) de la bitácora
+14;Controles que cambian;Rellenar clave;input#clave;OK;;;;;anotar variante (fecha/botón/posición) de la bitácora
+14;Controles que cambian;Clic Ingresar;button#btnIngresar;OK;;;;;anotar variante (fecha/botón/posición) de la bitácora
+14;Controles que cambian;Clic menú Movimientos;a#navMovimientos;OK;;;;;anotar variante (fecha/botón/posición) de la bitácora
+14;Controles que cambian;Seleccionar cuenta;select#selCuenta;OK;;;;;anotar variante (fecha/botón/posición) de la bitácora
+14;Controles que cambian;Rellenar fecha desde;input#fechaDesde;depende de la variante (texto/iso/nativa: se encuentra; selects: falla; calendario: solo lectura);;;;;anotar variante (fecha/botón/posición) de la bitácora
+14;Controles que cambian;Rellenar fecha hasta;input#fechaHasta;depende de la variante (igual que fecha desde);;;;;anotar variante (fecha/botón/posición) de la bitácora
+14;Controles que cambian;Clic Consultar;button#btnConsultar;OK si es botón/ícono/input con el mismo id; enlace: el id se mantiene pero cambia el tipo de elemento;;;;;anotar variante (fecha/botón/posición) de la bitácora
+14;Controles que cambian;Clic Ver detalle (fila %i%);button#btnDetalle-%i%;OK;;;;;anotar variante (fecha/botón/posición) de la bitácora
+14;Controles que cambian;Leer ordenante;span#detOrdenante;OK;;;;;anotar variante (fecha/botón/posición) de la bitácora
+14;Controles que cambian;Clic Cerrar detalle;button#btnCerrarDetalle;OK;;;;;anotar variante (fecha/botón/posición) de la bitácora
+14;Controles que cambian;Clic Descargar CSV;button#btnDescargarCsv;OK;;;;;anotar variante (fecha/botón/posición) de la bitácora
+14;Controles que cambian;Clic Cerrar sesión;button#btnSalir;OK;;;;;anotar variante (fecha/botón/posición) de la bitácora

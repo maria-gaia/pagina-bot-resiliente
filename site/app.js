@@ -769,7 +769,7 @@
       var iso = h('input', { id: base, name: base, type: 'text', placeholder: 'aaaa-mm-dd', maxlength: '10', autocomplete: 'off' });
       return {
         nodo: h('div', { class: 'campo' }, [h('label', { for: base }, etiqueta), iso]),
-        leer: function () { var v = iso.value.trim(); var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v); return m ? m[3] + '/' + m[2] + '/' + m[1] : v; },
+        leer: function () { var v = iso.value.trim(); var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v); return m ? m[3] + '/' + m[2] + '/' + m[1] : (v ? 'formato-invalido:' + v : ''); },
         limpiar: function () { iso.value = ''; },
         formato: 'aaaa-mm-dd'
       };
@@ -830,7 +830,7 @@
 
   function crearBotonConsultar(forma, alClic) {
     if (forma === 'enlace') {
-      return h('a', { id: 'btnConsultar', href: '#', class: 'enlace-accion', onclick: function (e) { e.preventDefault(); alClic(); } }, t('consultar'));
+      return h('a', { id: 'btnConsultar', href: '#', class: 'enlace-accion', onclick: function (e) { e.preventDefault(); alClic(); } }, [t('consultar'), h('span', { class: 'flecha', 'aria-hidden': 'true' }, '›')]);
     }
     if (forma === 'icono') {
       var b = h('button', { id: 'btnConsultar', type: 'submit', class: 'btn btn-primario btn-icono', 'aria-label': t('consultar'), title: t('consultar') });
