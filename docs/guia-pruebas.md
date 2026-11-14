@@ -1,6 +1,6 @@
 # Guía de pruebas · PoC "bot resiliente" con autocuración de Power Automate Desktop
 
-> **Sitio ficticio.** "Banco Demo Andino" no es un banco real. Todos los datos son inventados y se generan a partir de una semilla.
+> **Sitio ficticio.** "Banco Demo" no es un banco real. Todos los datos son inventados y se generan a partir de una semilla.
 > Referencia oficial: [Autocuración (versión preliminar) – Microsoft Learn](https://learn.microsoft.com/es-es/power-automate/desktop-flows/self-healing). La función está **en versión preliminar** y puede cambiar.
 
 ## 1. Objetivo
@@ -38,10 +38,11 @@ Según la documentación oficial (revisada el 13/11/2026, página con fecha 28/1
 
 | Parámetro | Valores | Uso |
 |---|---|---|
-| `escenario` | 0–6 | Tipo de cambio del portal (tabla siguiente). |
+| `escenario` | 0–13 | Tipo de cambio del portal (tabla siguiente). |
 | `seed` | entero, p. ej. `123` | Fija datos, IDs generados, latencia y retardos. **Usar siempre `seed=123` en la PoC.** |
 | `latencia` | `0` | Desactiva la latencia aleatoria (útil al capturar elementos). |
 | `panel` | `0` | Oculta el panel de pruebas (recomendado durante las corridas del bot). |
+| `escenario=auto` | `auto` (+ `pool=1,2,4` opcional) | En **cada carga** elige al azar un escenario de cambio. Útil para una demo "en vivo" de un portal que cambia sin avisar. Para la matriz usar escenarios fijos y, en modo auto, sacar de la bitácora qué escenario tocó en cada corrida (evento "Modo auto: escenario elegido…"). |
 
 | Esc. | Nombre | Qué cambia respecto al escenario 0 |
 |---|---|---|
@@ -52,6 +53,18 @@ Según la documentación oficial (revisada el 13/11/2026, página con fecha 28/1
 | 4 | Combinado | 1 + 2 + 3 a la vez. |
 | 5 | Iframe | La consulta de movimientos y el pop-up de detalle están **dentro de un iframe**. |
 | 6 | Carga diferida | Tabla de cuentas, formulario, resultados, botón de descarga y detalle **no existen en el DOM** hasta 1–6 s después. |
+
+**Escenarios 7–13: patrones observados en portales de banca empresas reales** (revisión solo de sus páginas públicas de login, 13/11/2026). Son recreaciones **genéricas**, sin nombres, logos, colores ni diseño de ningún banco.
+
+| Esc. | Nombre | Qué hace | Patrón real que imita |
+|---|---|---|---|
+| 7 | IDs autonumerados | IDs `cmp-0`, `cmp-1`… asignados en orden de dibujo; el desfase cambia en cada vista. | Frameworks que numeran componentes (`mat-input-0`, `_oj25\|input`, `dijit_form_Button_0`). |
+| 8 | IDs duplicados | Copias **ocultas** de usuario, clave, Ingresar, filtros, Consultar y Ordenante con el **mismo id**, ubicadas antes que las reales. | Plantillas ocultas que repiten `id="username"`, `id="password"`, `id="tokenInput"`. |
+| 9 | Login en 2 pasos | Usuario → **Continuar** (un `span` con rol de botón) → clave → Ingresar. | Login por pasos; botones que no son `<button>`. |
+| 10 | Avisos emergentes | Banner de cookies que tapa la página 0,8–2 s después de cargar y aviso modal tras el login. | Banners de cookies o avisos sobre el formulario. |
+| 11 | Carga muy lenta | El formulario de login aparece a los 10–15 s y cada consulta tarda 6–10 s. | Portales que tardan entre 7 y 14 s en mostrar el primer campo. |
+| 12 | Captcha aritmético | Operación dibujada en un canvas, que cambia en cada intento (no depende de la semilla). | Captcha de suma en imagen en el login. |
+| 13 | Sesión que expira | La sesión expira **una vez**, al abrir el detalle n.º 2–4 (fijo por semilla), y vuelve al login. | Expiración de sesión a mitad de un proceso largo. |
 
 Credenciales demo: usuario **`demo`**, clave **`Demo2026!`**.
 Datos disponibles: **01/01/2026 al 31/03/2026**. Rango sugerido para la PoC: cuenta **2200-4815-02**, del **01/02/2026** al **10/02/2026** (6 movimientos con `seed=123`).
@@ -149,6 +162,13 @@ Evidencia de Playwright con selectores CSS equivalentes (`tests/resultados.md`):
 - **Escenario 4:** el más exigente; esperar varias reparaciones por corrida. El resumen del portal solo detalla 3, así que el resto se ve en `repairWithAIInfo`.
 - **Escenario 5 (iframe):** validar si la reparación encuentra elementos dentro del iframe. Si no, el remedio clásico es capturar con el iframe como padre.
 - **Escenario 6 (diferido):** la autocuración **no es la herramienta adecuada** para elementos que todavía no existen. Debe resolverse con *Esperar a que la página web contenga el elemento* o con la directiva de reintentos. Riesgo: la IA podría "reparar" hacia otro elemento visible. Anotarlo si ocurre.
+- **Escenario 7 (autonumerados):** igual que el 1 para un selector por ID, pero además la numeración **se desplaza** entre vistas. Ver si la reparación se repite en cada corrida.
+- **Escenario 8 (duplicados):** el selector por ID **no falla**: encuentra la copia oculta. Sin autocuración, PAD puede escribir en el campo oculto o leer un ordenante vacío **sin dar error**. La autocuración solo se activa ante "Elemento no encontrado", así que aquí probablemente **no actúe**. Es el caso que más justifica las validaciones de negocio.
+- **Escenario 9 (2 pasos):** es un cambio de **flujo**, no de selector. La autocuración no inventa el clic en *Continuar*: el flujo debe contemplarlo (p. ej. "si existe Continuar, hacer clic").
+- **Escenario 10 (avisos):** el aviso aparece mientras el bot escribe. Puede no producir "Elemento no encontrado" (el elemento existe, solo está tapado). Se resuelve con una rutina "si aparece el aviso, aceptar".
+- **Escenario 11 (lento):** se resuelve con esperas de 20–30 s. Con esperas cortas, la autocuración se activaría sobre un elemento que todavía no existe.
+- **Escenario 12 (captcha):** **fuera del alcance** del RPA y de la autocuración. El resultado esperado es una **falla controlada** (mensaje "El resultado de la operación es incorrecto"), que se registra y notifica. Para un banco con captcha, la vía es negociar un canal (API, archivo, usuario sin captcha).
+- **Escenario 13 (sesión):** el bot debe detectar el mensaje de sesión expirada, reingresar y **retomar desde la fila pendiente**. No es un caso para la autocuración, sino para el manejo de excepciones del flujo.
 - **Precisión:** Microsoft advierte que la IA puede identificar ocasionalmente un elemento no previsto. Por eso hay que verificar siempre el CSV y los ordenantes leídos contra el escenario 0.
 - La reparación se aplica **en tiempo de ejecución**. Hay que confirmar si PAD actualiza el selector guardado; si no lo hace, se reparará en cada corrida y conviene actualizar el repositorio de elementos con el selector de `repairWithAIInfo`.
 
